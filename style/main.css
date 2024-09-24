@@ -415,6 +415,22 @@ body {
 }
 
 
+@media (max-width: 776px) {
+    .home {
+        height: 700px;
+
+        h1 {
+            font-size: 25px;
+            text-wrap: nowrap;
+        }
+
+        h3 {
+            font-size: 20px;
+        }
+    }
+}
+
+
 /* Start about */
 
 .about {
