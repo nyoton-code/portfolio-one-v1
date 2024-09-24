@@ -417,7 +417,7 @@ body {
 
 @media (max-width: 776px) {
     .home {
-        height: 750px;
+       height: 95vh;
 
         h1 {
             font-size: 25px;
