@@ -71,7 +71,7 @@ body {
 
 /*  ==============  special animation section :  */
 .anm {
-    height: 100%;
+    height: 100vh;
     width: 100%;
     position: absolute;
     z-index: 1200;
@@ -84,10 +84,10 @@ body {
     position: absolute;
     height: 2px;
     left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     transition: 0.3s;
-    top: 300px;
     border-radius: 55px;
-    transform: translateX(-50%);
     width: 0px;
     animation: ane 3s 1s;
     background: #ce4980;
@@ -363,10 +363,11 @@ body {
 
 .home {
     position: relative;
-    height: 600px;
+    height: 100vh;
 
 
     @media (min-width : 776px) {
+
         h1 {
             font-size: 50px;
         }
@@ -414,10 +415,11 @@ body {
 
 }
 
-
 @media (max-width: 776px) {
     .home {
-       height: 850px;
+        .home-text {
+            top: 40%;
+        }
 
         h1 {
             font-size: 25px;
@@ -425,11 +427,11 @@ body {
         }
 
         h3 {
+            width: 270px;
             font-size: 20px;
         }
     }
 }
-
 
 /* Start about */
 

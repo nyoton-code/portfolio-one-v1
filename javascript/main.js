@@ -1,71 +1,80 @@
-//  window onload animation 
-console.log(document.documentElement.scrollHeight);
 
-let divAN = document.querySelector(".anm");
-setTimeout(function () {
-    document.body.removeChild(divAN);
-    document.querySelector(".allp").style.display = "block";
-    console.log(document.documentElement.scrollHeight);
-}, 4500)
-// end window onload animation
+let data;
+async function fetchData() {
+    const resp = await fetch("/portfolio one v1/javascript/main.json");
+    data = await resp.json();
+}
 
 
-//     job animation text : 
-setTimeout(function () {
 
 
-    let jobAnimation = document.querySelector(".job");
-    let jobs = ["software enginner", "front end", "designer"];
-    let textc = jobAnimation;
 
-    let i = 0;
-    function typingEffect() {
-        let word = jobs[i].split("");
-        var loopTyping = function () {
-            if (word.length > 0) {
-                jobAnimation.innerHTML += word.shift();
-            } else {
-                setTimeout(() => deletingEffect(), 1000);
-                return false;
-            };
-            setTimeout(loopTyping, 200);
-        };
-        loopTyping();
-    };
+function enterAnimation() {
+    let divAN = document.querySelector(".anm");
+    setTimeout(() => {
+        document.body.removeChild(divAN);
+        document.querySelector(".allp").style.display = "block";
+    }, 4500)
+}
+enterAnimation();
 
-    function deletingEffect() {
-        let word = jobs[i].split("");
-        var loopDeleting = function () {
-            if (word.length > 0) {
-                word.pop();
-                jobAnimation.innerHTML = word.join("");
-            } else {
-                if (jobs.length > (i + 1)) {
-                    i++;
-                } else {
-                    i = 0;
+
+//     job animation text :
+function jobAnimation() {
+    fetchData().then(() => {
+        setTimeout(() => {
+            // fetchData().then(() => )
+            let jobAnimation = document.querySelector(".job");
+            let jobs = data.sections[0].home.jobs;
+            let i = 0;
+            function typingEffect() {
+                let word = jobs[i].split("");
+                var loopTyping = function () {
+                    if (word.length > 0) {
+                        jobAnimation.innerHTML += word.shift();
+                    } else {
+                        setTimeout(() => deletingEffect(), 1000);
+                        return false;
+                    };
+                    setTimeout(loopTyping, 200);
                 };
-                typingEffect();
-                return false;
+                loopTyping();
             };
-            setTimeout(loopDeleting, 200);
-        };
-        loopDeleting();
-    };
 
-    typingEffect();
+            function deletingEffect() {
+                let word = jobs[i].split("");
+                var loopDeleting = function () {
+                    if (word.length > 0) {
+                        word.pop();
+                        jobAnimation.innerHTML = word.join("");
+                    } else {
+                        if (jobs.length > (i + 1)) {
+                            i++;
+                        } else {
+                            i = 0;
+                        };
+                        typingEffect();
+                        return false;
+                    };
+                    setTimeout(loopDeleting, 200);
+                };
+                loopDeleting();
+            };
 
-}, 5000);
+            typingEffect();
 
-//   end   job animation text : 
-
-
-
-
-
+        }, 5000);
+    });
+}
+jobAnimation();
 
 
-// start scrool line  animation with hight :
+
+
+
+
+
+
 setTimeout(() => {
     let allScroll = document.scrollingElement.scrollHeight - document.scrollingElement.clientHeight;
     let so = document.querySelector(".progress-page  span");
@@ -94,12 +103,10 @@ setTimeout(() => {
     }
     changeColorSpan()
 }, 5000);
-// setTimeout(heighScrollf(), 6000);
 
 
 
 
-//  bar animation when get clicked 
 let listContaine = document.querySelector(".sidebar ul");
 
 
@@ -137,7 +144,6 @@ theBar.addEventListener("click", function () {
     }
 });
 
-// end bar animation  
 
 
 
@@ -187,14 +193,24 @@ function animateProgressBar(c, p) {
 }
 // Call the function 
 window.addEventListener("scroll", () => {
-    if (window.scrollY > 1200 && !animatedProgress) {
-        let circuless = document.querySelectorAll(".circule");
-        let texted = document.querySelectorAll('.skill-progress');
-        for (let i = 0; i < circuless.length; i++) {
-            animateProgressBar(circuless[i], texted[i]);
+    fetchData().then(() => {
+        if (window.scrollY > 1200 && !animatedProgress) {
+            let skills = data.sections[2].skills;
+            let skillName = document.querySelectorAll(".circule");
+            let dataSkill = document.querySelectorAll(".skill-progress");
+            for (let i = 0; i < skillName.length; i++) {
+                // skillName[i].textContent = skills[`skill-${i + 1}`][0];
+                dataSkill[i].setAttribute("data-skill", skills[`skill-${i + 1}`][1])
+            }
+            for (let i = 0; i < dataSkill.length; i++) {
+                animateProgressBar(skillName[i], dataSkill[i]);
+            }
+            animatedProgress = true;
+
+            // let circuless = document.querySelectorAll(".circule");
+            // let texted = document.querySelectorAll('.skill-progress');
         }
-        animatedProgress = true;
-    }
+    })
 });
 ///===========  end  circules   animation   ========================
 
@@ -204,7 +220,67 @@ window.addEventListener("scroll", () => {
 
 
 
+fetchData().then(() => {
+    let all = data.sections;
 
+    function home() {
+        let home = all[0].home["full-name"];
+        let homeText = document.querySelector(".home h1");
+        let firstName = home.match(/\w+\s/);;
+        let SecondeName = home.match(/\s\w+/);
+        homeText.innerHTML = `${firstName} <span>${SecondeName}</span>`;
+
+    }
+    home();
+
+    function about() {
+        let about = all[1].about;
+        let aboutContent = document.querySelectorAll(".about-contant p");
+        aboutContent[0].innerHTML = about.paragraphe1;
+        aboutContent[1].innerHTML = about.paragraphe2;
+
+    }
+    about();
+
+    function skills() {
+        let stats = all[2].skills;
+        let statsContent = document.querySelectorAll(".skills-contant h3");
+        Object.values(stats).forEach((e, i) => {
+            statsContent[i].innerHTML = e[0];
+        });
+
+    }
+    skills();
+
+    function services() {
+        let service = all[3].services;
+        let serviceContent = document.querySelectorAll(".services-contant h2");
+        for (let i = 0; i < serviceContent.length; i++) {
+            serviceContent[i].innerHTML = service[`services-${i + 1}`];
+        }
+
+    }
+    services();
+
+    function stats() {
+        let stats = all[4].stats;
+        let statsContent = document.querySelectorAll(".stats-contant span");
+        Object.values(stats).forEach((e, i) => {
+            statsContent[i].innerHTML = e + "+";
+        });
+    }
+    stats();
+
+    function contact() {
+        let contact = all[5].contact;
+        let contactContent = document.querySelectorAll(".contact-info-section");
+        Object.values(contact).forEach((e, i) => {
+            contactContent[i].querySelectorAll("p")[0].innerHTML = e[0];
+            contactContent[i].querySelectorAll("p")[1].innerHTML = e[1];
+        });
+    }
+    contact();
+})
 
 
 
